@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_esi_ai_interaction_list" model="ir.ui.view">
+        <field name="name">esi.ai.interaction.list</field>
+        <field name="model">esi.ai.interaction</field>
+        <field name="arch" type="xml">
+            <list string="Interacciones IA" decoration-success="state == 'done'" decoration-danger="state == 'error'">
+                <field name="create_date" string="Fecha"/>
+                <field name="name"/>
+                <field name="area"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="Esi_Agenteia_v19.group_esi_ai_manager"/>
+                <field name="state"/>
+                <field name="model_name" optional="hide"/>
+                <field name="input_tokens" sum="Tokens entrada" optional="hide"/>
+                <field name="output_tokens" sum="Tokens salida" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_esi_ai_interaction_form" model="ir.ui.view">
+        <field name="name">esi.ai.interaction.form</field>
+        <field name="model">esi.ai.interaction</field>
+        <field name="arch" type="xml">
+            <form string="Agente IA ESI">
+                <header>
+                    <button name="action_ask" type="object" string="Consultar agente IA"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_reset_draft" type="object" string="Reintentar"
+                            invisible="state != 'error'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done,error"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="state != 'draft'"/>
+                            <field name="area" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="company_id"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <group string="Consulta"><field name="prompt" nolabel="1" placeholder="Escriba su consulta..." readonly="state != 'draft'"/></group>
+                    <group string="Respuesta" invisible="state == 'draft'"><field name="answer" nolabel="1" readonly="1"/></group>
+                    <group string="Error" invisible="state != 'error'"><field name="error_message" nolabel="1" readonly="1"/></group>
+                    <group string="Uso de API" invisible="state == 'draft'">
+                        <field name="model_name"/>
+                        <field name="response_id"/>
+                        <field name="input_tokens"/>
+                        <field name="output_tokens"/>
+                        <field name="duration_seconds"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_esi_ai_interaction_search" model="ir.ui.view">
+        <field name="name">esi.ai.interaction.search</field>
+        <field name="model">esi.ai.interaction</field>
+        <field name="arch" type="xml">
+            <search string="Interacciones IA">
+                <field name="name"/>
+                <field name="prompt"/>
+                <field name="user_id"/>
+                <field name="area"/>
+                <filter name="own" string="Mis consultas" domain="[('user_id', '=', uid)]"/>
+                <filter name="done" string="Respondidas" domain="[('state', '=', 'done')]"/>
+                <filter name="error" string="Errores" domain="[('state', '=', 'error')]"/>
+                <separator/>
+                <filter name="group_area" string="Área" context="{'group_by': 'area'}"/>
+                <filter name="group_user" string="Usuario" context="{'group_by': 'user_id'}"/>
+                <filter name="group_month" string="Mes" context="{'group_by': 'create_date:month'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_esi_ai_interaction_graph" model="ir.ui.view">
+        <field name="name">esi.ai.interaction.graph</field>
+        <field name="model">esi.ai.interaction</field>
+        <field name="arch" type="xml">
+            <graph string="Uso de agentes IA" type="bar">
+                <field name="area"/>
+                <field name="input_tokens" type="measure"/>
+                <field name="output_tokens" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="view_esi_ai_interaction_pivot" model="ir.ui.view">
+        <field name="name">esi.ai.interaction.pivot</field>
+        <field name="model">esi.ai.interaction</field>
+        <field name="arch" type="xml">
+            <pivot string="Informe de interacciones">
+                <field name="area" type="row"/>
+                <field name="user_id" type="row"/>
+                <field name="create_date" interval="month" type="col"/>
+                <field name="input_tokens" type="measure"/>
+                <field name="output_tokens" type="measure"/>
+                <field name="duration_seconds" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="action_esi_ai_interactions" model="ir.actions.act_window">
+        <field name="name">Interacciones IA</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="search_view_id" ref="view_esi_ai_interaction_search"/>
+    </record>
+    <record id="action_esi_ai_dashboard" model="ir.actions.act_window">
+        <field name="name">Tablero de Agente IA</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="context">{'search_default_group_area': 1}</field>
+    </record>
+    <record id="action_esi_ai_reports" model="ir.actions.act_window">
+        <field name="name">Informe de Agente IA</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_group_month': 1}</field>
+    </record>
+    <record id="action_esi_ai_sales" model="ir.actions.act_window">
+        <field name="name">Ventas</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('area', '=', 'sales')]</field>
+        <field name="context">{'default_area': 'sales'}</field>
+    </record>
+    <record id="action_esi_ai_purchase" model="ir.actions.act_window">
+        <field name="name">Compras</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('area', '=', 'purchase')]</field>
+        <field name="context">{'default_area': 'purchase'}</field>
+    </record>
+    <record id="action_esi_ai_inventory" model="ir.actions.act_window">
+        <field name="name">Inventario</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('area', '=', 'inventory')]</field>
+        <field name="context">{'default_area': 'inventory'}</field>
+    </record>
+    <record id="action_esi_ai_importation" model="ir.actions.act_window">
+        <field name="name">Importación</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('area', '=', 'importation')]</field>
+        <field name="context">{'default_area': 'importation'}</field>
+    </record>
+    <record id="action_esi_ai_manufacturing" model="ir.actions.act_window">
+        <field name="name">Fabricación</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('area', '=', 'manufacturing')]</field>
+        <field name="context">{'default_area': 'manufacturing'}</field>
+    </record>
+    <record id="action_esi_ai_pos" model="ir.actions.act_window">
+        <field name="name">POS</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('area', '=', 'pos')]</field>
+        <field name="context">{'default_area': 'pos'}</field>
+    </record>
+    <record id="action_esi_ai_accounting" model="ir.actions.act_window">
+        <field name="name">Contabilidad</field>
+        <field name="res_model">esi.ai.interaction</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('area', '=', 'accounting')]</field>
+        <field name="context">{'default_area': 'accounting'}</field>
+    </record>
+</odoo>

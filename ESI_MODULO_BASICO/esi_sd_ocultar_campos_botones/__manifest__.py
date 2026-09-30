@@ -1,0 +1,2 @@
+# -*- coding: utf-8 -*-
+{'name': 'ESI - Ocultar Campos y Botones', 'version': '19.0.1.0.0', 'category': 'Herramientas extras', 'summary': 'Compatibilidad histórica ESI; sin modificaciones activas de interfaz', 'sequence': '10', 'author': 'ESI - Especialistas en Sistemas Integrados', 'maintainer': 'ESI - Especialistas en Sistemas Integrados', 'depends': ['sale', 'purchase'], 'data': [], 'demo': [], 'installable': True, 'application': False, 'auto_install': False, 'website': 'https://esibolivia.store'}

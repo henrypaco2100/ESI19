@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_esi_ai_settings_form" model="ir.ui.view">
+        <field name="name">esi.ai.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="arch" type="xml">
+            <form string="Ajustes del Agente IA ESI">
+                <sheet>
+                    <div class="oe_title"><h1>Configuración de Agente IA</h1></div>
+                    <group string="OpenAI">
+                        <field name="esi_ai_api_key" password="True" placeholder="sk-..."/>
+                        <field name="esi_ai_model" placeholder="gpt-5.6-terra"/>
+                        <field name="esi_ai_max_output_tokens"/>
+                    </group>
+                    <div class="text-muted">La clave se usa únicamente desde el servidor. Configure un modelo disponible para su cuenta de API.</div>
+                </sheet>
+                <footer>
+                    <button name="execute" string="Guardar" type="object" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_esi_ai_settings" model="ir.actions.act_window">
+        <field name="name">Ajustes del Agente IA</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_esi_ai_settings_form"/>
+        <field name="target">inline</field>
+    </record>
+</odoo>

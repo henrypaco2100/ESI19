@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="odoo_report_view_form" model="ir.ui.view">
+            <field name="name">Odoo Report View kardex</field>
+            <field name="model">kardex.report</field>
+            <field name="arch" type="xml">
+                <form string="Reporte Kardex Físico Valorado">
+                    <sheet>
+                        <group>
+                            <group col="1">
+                                <field name="company_id" invisible="1"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="categ_id" options="{'no_create': True}" widget="many2many_tags"/>
+                                <field name="seleccionalmacenes" options="{'no_create': True}" widget="many2many_tags" domain="[('company_id', '=', company_id)]"/>
+                                <field name="seleccionproductos" options="{'no_create': True}" widget="many2many_tags"/>
+                                <!-- ESI corrección: múltiples U.M. y columnas dinámicas en el reporte. -->
+                                <field name="uom_ids" options="{'no_create': True}" widget="many2many_tags"/>
+                            </group>
+                            <group col="2">
+                                <field name="sd_notdetails"/>
+                                <field name="filtraralmacenes"/>
+                                <field name="filtrarcategorias"/>
+                                <field name="filtrartipomov"/>
+                                <field name="mostrar_ubicaciones"/>
+                                <field name="sd_notdocuments"/>
+                                <field name="sinvariantes"/>
+                            </group>
+                        </group>
+                        <group invisible="1">
+                            <field name="excel_file" filename="file_name"/>
+                            <field name="file_name"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <!-- ESI corrección: VER / PDF / EXCEL desde el mismo wizard. -->
+                        <button name="action_view_kardex" string="Ver" type="object"
+                                class="oe_highlight" default_focus="1"/>
+                        <button name="action_report_pdf" string="PDF" type="object" class="btn-secondary"/>
+                        <button name="action_report_kardex" string="Excel" type="object" class="btn-secondary"/>
+                        <button string="Cancelar" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="odoo_report_view_action" model="ir.actions.act_window">
+            <field name="name">Reporte Kardex Físico Valorado</field>
+            <field name="res_model">kardex.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="odoo_report_view_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="kardex_product_report_cat" name="Reporte de Kardex"
+                  parent="stock.menu_warehouse_report" sequence="500"/>
+        <menuitem id="kardex_product_report" name="Impresión de Kardex Físico"
+                  action="odoo_report_view_action" parent="kardex_product_report_cat"/>
+    </data>
+</odoo>

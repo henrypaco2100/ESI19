@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+      ESI correccion V2 Odoo 19:
+      o_database_list esta en t-attf-class, NO en class.
+      Fuente base Odoo 19: web.login_layout.
+    -->
+    <template id="esi_login_layout" inherit_id="web.login_layout" name="ESI Login Layout">
+        <xpath expr="//t[@t-set='body_classname']" position="replace">
+            <t t-set="body_classname" t-value="'bg-100 esi_login_body'"/>
+        </xpath>
+
+        <xpath expr="//div[@class='container py-5']" position="before">
+            <section class="esi_login_brand" aria-label="ESI ERP">
+                <div class="esi_login_brand_inner">
+                    <img class="esi_login_brand_logo"
+                         src="/esi_theme_core_v19/static/src/img/esi_logo_white.png"
+                         alt="ESI - Especialistas en Sistemas Integrados"/>
+                    <div class="esi_login_badge">ESI ERP · Odoo 19</div>
+                    <h1>Gestion inteligente, clara y conectada.</h1>
+                    <p>Una interfaz empresarial preparada para automatizacion e inteligencia artificial, sin perder la facilidad de uso.</p>
+                    <div class="esi_login_features">
+                        <span><i class="fa fa-check-circle"/> Interfaz familiar</span>
+                        <span><i class="fa fa-check-circle"/> Procesos integrados</span>
+                        <span><i class="fa fa-check-circle"/> Preparado para IA</span>
+                    </div>
+                    <div class="esi_login_orbit esi_login_orbit_one"/>
+                    <div class="esi_login_orbit esi_login_orbit_two"/>
+                </div>
+            </section>
+        </xpath>
+
+        <xpath expr="//div[contains(@t-attf-class, 'o_database_list')]" position="before">
+            <div class="esi_login_mobile_brand d-lg-none">
+                <img src="/esi_theme_core_v19/static/src/img/esi_logo.png" alt="ESI"/>
+                <span>ERP 19</span>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[contains(@class, 'text-center') and contains(@class, 'small') and contains(@class, 'mt-4')]" position="inside">
+            <div class="esi_login_signature mt-2">Implementado por ESI · Especialistas en Sistemas Integrados</div>
+        </xpath>
+    </template>
+</odoo>

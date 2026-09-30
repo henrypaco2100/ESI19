@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saledetails_withsubtotal"
+              name="Sale Details with Totals/Detail"
+              inherit_id="point_of_sale.report_saledetails">
+
+        <xpath expr="//div[contains(@class, 'text-center')]/strong" position="after">
+            <div t-if="session_names" style="margin-top: 6px;">
+                <strong>Sesión(es): </strong>
+                <span t-esc="', '.join(session_names)"/>
+            </div>
+            <div style="margin-top: 4px;">
+                <strong>Tipo de reporte: </strong>
+                <span t-esc="report_type_label"/>
+            </div>
+        </xpath>
+
+        <!-- ESI corrección: Detalles de ventas queda enfocado solamente en ventas.
+             Costo y ganancia se movieron a Informes > Análisis de pedidos. -->
+        <xpath expr="//div[@class='page']/table[1]" position="replace">
+            <!-- ESI corrección: 3 modalidades: Total / Total-precio-UDM / Total detallado. -->
+            <t t-if="report_type == 'totals'">
+                <table class="table table-sm" style="font-size: 11px; table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 58%;">Producto</th>
+                            <th style="width: 18%; text-align: right;">Cantidad</th>
+                            <th style="width: 24%; text-align: right;">Precio total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="total_lines" t-as="line">
+                            <t t-set="internal_reference"
+                               t-value="line['code'] and '[%s] ' % line['code'] or ''"/>
+                            <td style="word-wrap: break-word;">
+                                <t t-esc="internal_reference"/>
+                                <t t-esc="line['product_name']"/>
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <t t-esc="line.get('quantity_display', line['quantity'])"/>
+                                <t t-if="line['uom']"> <t t-esc="line['uom']"/></t>
+                            </td>
+                            <td style="text-align: right;">
+                                <t t-esc="line['price_total']"
+                                   t-options="{'widget': 'float', 'precision': currency_precision}"/>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: bold; border-top: 2px solid #555;">
+                            <td>TOTAL</td>
+                            <td></td>
+                            <td style="text-align: right;">
+                                <t t-esc="detailed_total"
+                                   t-options="{'widget': 'float', 'precision': currency_precision}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+
+            <t t-elif="report_type == 'total_detailed'">
+                <!-- ESI corrección: agrupa por Producto + UDM + precio unitario real. Sin fecha ni método de pago. -->
+                <table class="table table-sm" style="font-size: 11px; table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 45%;">Producto</th>
+                            <th style="width: 18%; text-align: right;">Cantidad</th>
+                            <th style="width: 17%; text-align: right;">Precio unitario</th>
+                            <th style="width: 20%; text-align: right;">Precio total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="total_detailed_lines" t-as="line">
+                            <t t-set="internal_reference"
+                               t-value="line['code'] and '[%s] ' % line['code'] or ''"/>
+                            <td style="word-wrap: break-word;">
+                                <t t-esc="internal_reference"/>
+                                <t t-esc="line['product_name']"/>
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <t t-esc="line.get('quantity_display', line['quantity'])"/>
+                                <t t-if="line['uom']"> <t t-esc="line['uom']"/></t>
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <t t-esc="line['price_unit']"
+                                   t-options="{'widget': 'float', 'precision': price_precision}"/>
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <t t-esc="line['price_total']"
+                                   t-options="{'widget': 'float', 'precision': currency_precision}"/>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: bold; border-top: 2px solid #555;">
+                            <td>TOTAL</td>
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: right;">
+                                <t t-esc="detailed_total"
+                                   t-options="{'widget': 'float', 'precision': currency_precision}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+
+            <t t-else="">
+                <table class="table table-sm" style="font-size: 10px; table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 27%;">Producto</th>
+                            <th style="width: 17%;">Método de pago</th>
+                            <th style="width: 19%;">Fecha</th>
+                            <th style="width: 12%; text-align: right;">Cantidad</th>
+                            <th style="width: 12%; text-align: right;">Precio Unit.</th>
+                            <th style="width: 13%; text-align: right;">Precio total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="detailed_lines" t-as="line">
+                            <t t-set="internal_reference"
+                               t-value="line['code'] and '[%s] ' % line['code'] or ''"/>
+                            <td style="word-wrap: break-word;">
+                                <t t-esc="internal_reference"/>
+                                <t t-esc="line['product_name']"/>
+                            </td>
+                            <td style="word-wrap: break-word;">
+                                <t t-esc="line['payment_method'] or '-'"/>
+                            </td>
+                            <td>
+                                <t t-esc="line['date']" t-options="{'widget': 'datetime'}"/>
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <t t-esc="line.get('quantity_display', line['quantity'])"/>
+                                <t t-if="line['uom']"> <t t-esc="line['uom']"/></t>
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <t t-esc="line['price_unit']"
+                                   t-options="{'widget': 'float', 'precision': price_precision}"/>
+                                <t t-if="line['discount'] != 0">
+                                    <br/>Desc: <t t-esc="line['discount']"/>%
+                                </t>
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <!-- ESI corrección: usar price_subtotal_incl real de Odoo. -->
+                                <t t-esc="line['subtotal']"
+                                   t-options="{'widget': 'float', 'precision': currency_precision}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+</odoo>

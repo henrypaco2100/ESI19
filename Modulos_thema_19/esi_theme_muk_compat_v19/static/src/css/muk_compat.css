@@ -1,0 +1,66 @@
+/* ========================================================================== 
+   ESI <-> MuK compatibility for Odoo 19
+   Este modulo depende de muk_web_theme para que sus reglas carguen despues.
+   Basado en clases publicas de MuK 19: mk_app_menu / mk_apps_sidebar_panel.
+   ========================================================================== */
+body.o_web_client .mk_apps_sidebar_panel {
+    background: linear-gradient(180deg,#061f42 0%,#072955 48%,#073f55 100%) !important;
+    border-right: 1px solid rgba(255,255,255,.08);
+    box-shadow: 4px 0 18px rgba(7,41,85,.12);
+}
+body.o_web_client .mk_apps_sidebar_menu > li > a {
+    color: rgba(255,255,255,.88) !important;
+    border-left: 3px solid transparent;
+    transition: background-color .14s ease, border-color .14s ease;
+}
+body.o_web_client .mk_apps_sidebar_menu > li:hover > a {
+    color: #fff !important;
+    background: rgba(255,255,255,.09) !important;
+    border-left-color: rgba(24,180,88,.55);
+}
+body.o_web_client .mk_apps_sidebar_menu > li.active > a {
+    color: #fff !important;
+    background: linear-gradient(90deg,rgba(0,152,70,.50),rgba(0,152,70,.15)) !important;
+    border-left-color: #38d27c;
+}
+body.o_web_client .mk_apps_sidebar_icon {
+    border-radius: 6px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.16));
+}
+body.o_web_client .mk_apps_sidebar_logo {
+    border-top: 1px solid rgba(255,255,255,.08);
+    background: rgba(0,0,0,.08);
+}
+
+/* Home menu de MuK: fondo claro, no oscuro */
+body.o_web_client .mk_app_menu.dropdown-menu {
+    background: radial-gradient(circle at 86% 8%,rgba(0,152,70,.10),transparent 26%), linear-gradient(145deg,#f8fbff,#eef4f8) !important;
+}
+body.o_web_client .mk_app_menu .o_app > a {
+    padding: 8px;
+    border-radius: 14px;
+    text-decoration: none;
+}
+body.o_web_client .mk_app_menu .o_app:hover > a {
+    background: rgba(255,255,255,.72);
+    box-shadow: 0 8px 24px rgba(7,41,85,.08);
+}
+body.o_web_client .mk_app_menu .mk_app_icon {
+    padding: 8px !important;
+    border-radius: 14px !important;
+    background: #fff !important;
+    box-shadow: 0 5px 18px rgba(7,41,85,.10) !important;
+}
+body.o_web_client .mk_app_menu .mk_app_name {
+    color: #173052 !important;
+    margin-top: 8px;
+    font-family: "Segoe UI Variable","Segoe UI",sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Navbar MuK: mantener identidad ESI */
+body.o_web_client .o_main_navbar {
+    background: linear-gradient(105deg,#072955 0%,#0a3973 72%,#08714f 145%) !important;
+}

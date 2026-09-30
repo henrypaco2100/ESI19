@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="form_automate_purchase_order_workflow" model="ir.ui.view">
+        <field name="name">tipo.compra.form.esi</field>
+        <field name="model">automated.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de Compra">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>ESI:</strong> este tipo define la numeración y el flujo que se aplicará al confirmar la compra.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="st_almacen" domain="[('company_id', '=', company_id)]"/>
+                            <field name="purchase_journal" domain="[('company_id', '=', company_id), ('type', '=', 'purchase')]"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                            <field name="st_entregar_a" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="st_secuencia_quotation" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                            <field name="validation_picking"/>
+                            <field name="validate_invoice"/>
+                            <field name="allow_payment_from_purchase"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tree_automate_purchase_order_workflow" model="ir.ui.view">
+        <field name="name">tipo.compra.tree.esi</field>
+        <field name="model">automated.purchase</field>
+        <field name="arch" type="xml">
+            <list string="Tipo de Compras">
+                <field name="sequence" widget="handle" string="Ordenar"/>
+                <field name="name"/>
+                <field name="st_almacen"/>
+                <field name="purchase_journal"/>
+                <field name="allow_payment_from_purchase"/>
+                <field name="validation_picking"/>
+                <field name="validate_invoice"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="auto_purchase_workflow" model="ir.actions.act_window">
+        <field name="name">Tipo de Compras</field>
+        <field name="res_model">automated.purchase</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_button_automate_purchase_order" model="ir.ui.view">
+        <field name="name">purchase.order.tipo.compra.esi</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_ref" position="after">
+                <field name="work_process_order_id" string="Tipo de Compra" options="{'no_create': True, 'no_create_edit': True}" readonly="state not in ('draft', 'sent', 'to approve')"/>
+            </field>
+
+            <!-- ESI: ninguna fecha o plazo comercial se oculta.
+                 Odoo 13 oculta Fecha orden al confirmar y deja Fecha prevista/Plazo de pago
+                 en Otra información. Los mostramos también en la cabecera para que sean visibles. -->
+            <field name="date_order" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}</attribute>
+            </field>
+            <field name="date_order" position="after">
+                <field name="date_planned" string="Fecha prevista" readonly="state in ('purchase', 'done', 'cancel')"/>
+                <field name="payment_term_id" string="Plazo de pago" options="{'no_create': True}" readonly="(invoice_status == 'invoiced' or state == 'done')"/>
+            </field>
+            <xpath expr="//field[@name='order_line']/list/field[@name='date_planned']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <field name="state" position="after">
+                <field name="esi_can_register_payment" invisible="1"/>
+            </field>
+            <button name="button_confirm" position="after">
+                <button name="action_open_esi_payment_wizard" type="object" string="Registrar Pago" class="btn-primary" invisible="esi_can_register_payment == False"/>
+            </button>
+        </field>
+    </record>
+
+    <menuitem id="menu_auto_purchase" name="Tipo de Compras" parent="purchase.menu_purchase_config" action="auto_purchase_workflow" groups="purchase.group_purchase_manager" sequence="25"/>
+</odoo>

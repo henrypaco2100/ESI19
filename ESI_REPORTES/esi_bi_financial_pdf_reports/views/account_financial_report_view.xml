@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+        <record id="esi_bi_financial_pdf_reports_account_financial_report_form" model="ir.ui.view">
+            <field name="name">bi.financial.reports.pdf.account.financial.report.form</field>
+            <field name="model">account.financial.report</field>
+            <field name="arch" type="xml">
+                <form string="Informe de la cuenta">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="level" invisible="1"/>
+                            <field name="sign"/>
+                            <field name="sd_planilla" required="(sd_tipo_reporte == 'estado_resultado' or sd_tipo_reporte == 'balance_general')" invisible="sd_tipo_reporte == 'hijos'"/>
+                        </group>
+                        <group>
+                            <field name="sd_numero_cuenta"/>
+                            <field name="sd_tipo_reporte"/>
+                            <field name="parent_id"/>
+                            <field name="type"/>
+                            <field name="style_overwrite"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <field name="st_excluir_diario" widget="many2many_tags"/>
+                    </group>
+                    <notebook>
+                        <page string="Informe" name="sd_informes">
+                            <field name="children_ids"/>
+                            <group>
+                                <field name="display_detail" invisible="type not in ['accounts', 'account_type', 'result_type']"/>
+                                <field name="account_report_id" invisible="type != 'account_report'"/>
+                            </group>
+                            <field name="account_ids" invisible="type != 'accounts'"/>
+                            <field name="account_type_ids" invisible="type != 'account_type'"/>
+                            <field name="sd_account_financial_report_line_ids" widget="section_and_note_one2many" mode="tree,form" invisible="type != 'result_type'">
+                                <form>
+                                    <group>
+                                        <field name="sd_report_id"/>
+                                        <field name="sd_operacion_report"/>
+                                    </group>
+                                </form>
+                                <list string="Informes" editable="bottom">
+                                    <field name="sd_report_id"/>
+                                    <field name="sd_operacion_report"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="esi_bi_financial_pdf_reports_account_financial_report_tree" model="ir.ui.view">
+            <field name="name">bi.financial.reports.v12.account.financial.report.tree</field>
+            <field name="model">account.financial.report</field>
+            <field name="arch" type="xml">
+                <list string="Informe de la cuenta" default_order="sequence asc,id asc">
+                    <field name="sequence" widget="handle"/>
+                    <field name="sd_numero_cuenta"/>
+                    <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="account_report_id"/>
+                </list>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_financial_report" name="Informe Final" parent="account.menu_finance_configuration"/>
+        <record id="action_account_report_configuration" model="ir.actions.act_window">
+            <field name="name">Informe Final</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.financial.report</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_account_report_configuration" name="Informes de la Cuenta" parent="menu_financial_report" action="action_account_report_configuration"/>
+
+    </data>
+</odoo>

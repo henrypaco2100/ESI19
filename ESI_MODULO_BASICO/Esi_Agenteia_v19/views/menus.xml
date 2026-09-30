@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_esi_ai_root" name="Agente IA" sequence="35"
+              groups="Esi_Agenteia_v19.group_esi_ai_user" web_icon="Esi_Agenteia_v19,static/description/icon.svg"/>
+    <menuitem id="menu_esi_ai_dashboard" name="Tablero" parent="menu_esi_ai_root"
+              action="action_esi_ai_dashboard" sequence="5"/>
+    <menuitem id="menu_esi_ai_sales" name="Ventas" parent="menu_esi_ai_root"
+              action="action_esi_ai_sales" sequence="10"/>
+    <menuitem id="menu_esi_ai_purchase" name="Compras" parent="menu_esi_ai_root"
+              action="action_esi_ai_purchase" sequence="20"/>
+    <menuitem id="menu_esi_ai_inventory" name="Inventario" parent="menu_esi_ai_root"
+              action="action_esi_ai_inventory" sequence="30"/>
+    <menuitem id="menu_esi_ai_importation" name="Importación" parent="menu_esi_ai_root"
+              action="action_esi_ai_importation" sequence="40"/>
+    <menuitem id="menu_esi_ai_manufacturing" name="Fabricación" parent="menu_esi_ai_root"
+              action="action_esi_ai_manufacturing" sequence="50"/>
+    <menuitem id="menu_esi_ai_pos" name="POS" parent="menu_esi_ai_root"
+              action="action_esi_ai_pos" sequence="60"/>
+    <menuitem id="menu_esi_ai_accounting" name="Contabilidad" parent="menu_esi_ai_root"
+              action="action_esi_ai_accounting" sequence="70"/>
+    <menuitem id="menu_esi_ai_reports" name="Informe" parent="menu_esi_ai_root"
+              action="action_esi_ai_reports" sequence="80"/>
+    <menuitem id="menu_esi_ai_settings" name="Ajustes" parent="menu_esi_ai_root"
+              action="action_esi_ai_settings" sequence="90" groups="base.group_system"/>
+</odoo>

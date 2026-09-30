@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_details_wizard_session_filter" model="ir.ui.view">
+        <field name="name">pos.details.wizard.form.session.filter</field>
+        <field name="model">pos.details.wizard</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_details_wizard"/>
+        <field name="arch" type="xml">
+
+            <!-- ESI corrección: layout 50/50 real. El group exterior usa dos
+                 columnas, no cuatro; así cada bloque ocupa exactamente media
+                 anchura del modal y deja de quedar amontonado a la izquierda. -->
+            <xpath expr="//group[field[@name='start_date'] and field[@name='end_date']]" position="replace">
+                <group col="2" colspan="4">
+                    <group string="Sesiones" colspan="1">
+                        <field name="session_ids"
+                               string="Sesiones POS"
+                               widget="many2many_tags"
+                               nolabel="1"
+                               domain="[('config_id', 'in', pos_config_ids)]"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                    </group>
+                    <group string="Tipo de reporte" colspan="1">
+                        <field name="report_type" widget="radio" nolabel="1"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <xpath expr="//group[field[@name='pos_config_ids']]" position="replace">
+                <group col="2" colspan="4">
+                    <group string="Puntos de Venta" colspan="1">
+                        <field name="pos_config_ids"
+                               string="Puntos de Venta"
+                               widget="many2many_tags"
+                               nolabel="1"
+                               options="{'no_create': True, 'no_create_edit': True}"/>
+                    </group>
+                    <group string="Fechas" colspan="1">
+                        <field name="start_date" string="Fecha de inicio"/>
+                        <field name="end_date" string="Fecha final"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <xpath expr="//footer" position="replace">
+                <footer>
+                    <button name="action_view_report"
+                            string="Ver reporte"
+                            type="object"
+                            class="btn-primary"/>
+                    <button name="generate_report"
+                            string="Descargar PDF"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="action_export_xlsx"
+                            string="Descargar Excel"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button string="Cancelar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+</odoo>

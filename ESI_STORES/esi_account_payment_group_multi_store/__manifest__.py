@@ -1,0 +1,2 @@
+# -*- coding: utf-8 -*-
+{'name': 'ESI - Compatibilidad Pagos Multi Store', 'version': '19.0.0.2.0.0', 'category': 'Accounting', 'summary': 'Compatibilidad histórica; los pagos estándar Multi Store se gestionan desde ESI Account Multi Store', 'author': 'ESI - Especialistas en Sistemas Integrados', 'maintainer': 'ESI - Especialistas en Sistemas Integrados', 'website': 'https://esibolivia.store', 'license': 'AGPL-3', 'depends': ['account', 'esi_base_multi_store', 'esi_account_multi_store'], 'data': [], 'installable': True, 'auto_install': False, 'application': False}
